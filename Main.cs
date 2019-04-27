@@ -30,7 +30,8 @@ namespace RoRCheats
         public static uint moneyToGive = 100;
         public static uint coinsToGive = 10;
         public static int btnY, mulY;
-        
+        public static string str = "0";
+
 
         private void OnGUI()
         {
@@ -327,12 +328,19 @@ namespace RoRCheats
                     if (allItemsQuantity >= 1)
                         allItemsQuantity += 1;
                 }
-                if (GUI.Button(BtnRect(9, false), "Stack Inventory", BtnStyle)) 
+                if (GUI.Button(BtnRect(9, true), "Give Item by ID", BtnStyle))
+                {
+                    int i;
+                    i = int.Parse(str);
+                    GiveItem(i);
+                }
+                str = GUI.TextField(new Rect(rect.x + widthSize - 80, rect.y + btnY, 85, 40), str, OffStyle);
+                if (GUI.Button(BtnRect(10, false), "Stack Inventory", BtnStyle)) 
                 {
                     StackInventory();
 
                 }
-                if (GUI.Button(BtnRect(10, false), "Clear Inventory", BtnStyle))
+                if (GUI.Button(BtnRect(11, false), "Clear Inventory", BtnStyle))
                 {
 
                     ClearInventory();
@@ -532,8 +540,10 @@ namespace RoRCheats
             {
                 for (ItemIndex itemIndex = ItemIndex.Syringe; itemIndex < (ItemIndex)78; itemIndex++)
                 {
-                    
-                    LocalPlayerInv.ResetItem(itemIndex);
+                    //If an item exists, delete the whole stack of it
+                    int itemCount = LocalPlayerInv.GetItemCount(itemIndex);
+                    if (itemCount>0)
+                    LocalPlayerInv.RemoveItem(itemIndex,itemCount);
                     
                 }
                 LocalPlayerInv.SetEquipmentIndex(EquipmentIndex.None);
@@ -556,7 +566,14 @@ namespace RoRCheats
                 }
             }
         }
-       
+
+
+        private static void GiveItem(int itemIndex)
+        {
+            if (LocalPlayerInv)
+                LocalPlayerInv.GiveItem((ItemIndex)itemIndex);
+        }
+
         private static void StackInventory()
         {
             //Does the same thing as the shrine of order. Orders all your items into stacks of several random items.

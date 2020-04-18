@@ -515,7 +515,7 @@ namespace RoRCheats
                         LocalPlayerInv = LocalPlayer.GetComponent<Inventory>();
                         LocalHealth = LocalPlayer.GetBody().GetComponent<HealthComponent>();
                         LocalSkills = LocalPlayer.GetBody().GetComponent<SkillLocator>();
-                        if (LocalPlayer.alive) _CharacterCollected = true;
+                        if (LocalHealth.alive) _CharacterCollected = true;
                         else _CharacterCollected = false;
                     }
                 }         

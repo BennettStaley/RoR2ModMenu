@@ -526,15 +526,21 @@ namespace RoRCheats
             }
         }
         //clears inventory, duh.
-        private static void ClearInventory()
+        public static void ClearInventory()
         {
             if (LocalPlayerInv)
             {
-                for (ItemIndex itemIndex = ItemIndex.Syringe; itemIndex < (ItemIndex)78; itemIndex++)
+                //Loops through every item in ItemIndex enum
+                foreach (string itemName in Enum.GetNames(typeof(ItemIndex)))
                 {
-                    
-                    LocalPlayerInv.ResetItem(itemIndex);
-                    
+                    ItemIndex itemIndex = (ItemIndex)Enum.Parse(typeof(ItemIndex), itemName); //Convert itemName string to and ItemIndex
+                    LocalPlayerInv.ResetItem(itemIndex); int itemCount = LocalPlayerInv.GetItemCount(itemIndex);
+                    //If an item exists, delete the whole stack of it
+                    if (itemCount >= 0) // Just > doesnt delete from top bar
+                    {
+                        LocalPlayerInv.RemoveItem(itemIndex, itemCount); LocalPlayerInv.ResetItem(itemIndex);
+                        LocalPlayerInv.itemAcquisitionOrder.Remove(itemIndex);
+                    }
                 }
                 LocalPlayerInv.SetEquipmentIndex(EquipmentIndex.None);
             }
